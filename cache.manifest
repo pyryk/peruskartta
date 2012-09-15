@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+/index.html
+/js/peruskartta.js
+/js/lib/leaflet/leaflet.css
+/js/lib/leaflet/leaflet.ie.css
+/js/lib/leaflet/leaflet.js
+/js/lib/leaflet/images/layers.png
+/js/lib/leaflet/images/marker-icon.png
+/js/lib/leaflet/images/marker-shadow.png
+/js/lib/leaflet/images/zoom-in.png
+/js/lib/leaflet/images/zoom-out.png
+
+NETWORK:
+*
