@@ -8,9 +8,8 @@ CACHE:
 /js/lib/leaflet/leaflet.js
 /js/lib/leaflet/images/layers.png
 /js/lib/leaflet/images/marker-icon.png
+/js/lib/leaflet/images/marker-icon@2x.png
 /js/lib/leaflet/images/marker-shadow.png
-/js/lib/leaflet/images/zoom-in.png
-/js/lib/leaflet/images/zoom-out.png
 
 NETWORK:
 *
