@@ -30,9 +30,46 @@ var peruskartta = {
     this.map.on('movestart', function(e) {
       this.panned = true;
     }, this);
+
+    this.map.on('locationfound', window.proxy(this, function(e) {
+      this.setLocation(e.latlng, e.accuracy);
+    }));
+
+    /*this.map.on('locationerror', window.proxy(this, function(e) {
+      console.log('Could not get your location. Please allow Geolocation in your browser.');
+    }));*/
+
+    var mapChanged = window.proxy(this, function(e) {
+      console.log('move', e);
+      var center = this.map.getCenter();
+      var zoom = this.map.getZoom();
+
+      this.setHash({center: center, zoom: zoom});
+    });
+
+    this.map.on('moveend', mapChanged);
+    this.map.on('zoomend', mapChanged);
+
+    var location = this.getHash();
+    if (location.center && location.zoom) {
+      this.map.setView(location.center, location.zoom);
+    }
     
-    window.setInterval(window.proxy(this, this.updateLocation), 30000);
+    //window.setInterval(window.proxy(this, this.updateLocation), 10000);
     this.updateLocation();
+
+    if (window.applicationCache) {
+      applicationCache.addEventListener('updateready', function() {
+        console.log('App update is now ready');
+        if (confirm('An update is available. Reload now?')) {
+          window.location.reload();
+        }
+      });
+
+      applicationCache.addEventListener('cached', function() {
+        console.log('stuff has now been cached');
+      })
+    }
     
   },
   isInLocation: function(latlng) {
@@ -66,14 +103,30 @@ var peruskartta = {
     }
   },
   updateLocation: function() {
-    navigator.geolocation.getCurrentPosition(window.proxy(this, function(position) {
-      var latlng = new L.LatLng(position.coords.latitude, position.coords.longitude);
-      this.setLocation(latlng, position.coords.accuracy);
-      
-    }), function(error) {
-      console.log("Could not get user location");
-    },
-    {timeout:10000});
+    this.map.locate({enableHighAccuracy: true, watch: true});
+  },
+  setHash: function(opts) {
+    if (!opts) {
+      this.setHash({center: this.map.getCenter(), zoom: this.map.getZoom()});
+    } else {
+      var hash = '#' + opts.center.lat + ',' + opts.center.lng + '/' + opts.zoom;
+      document.location.hash = hash;
+    }
+  },
+  getHash: function() {
+    var hash = document.location.hash.substring(1);
+
+    var parts = hash.split('/');
+    if (parts.length < 2) {
+      return {};
+    }
+
+    var center = parts[0].split(',');
+    if (center.length < 2) {
+      return {};
+    }
+
+    return {center: new L.LatLng(center[0], center[1]), zoom: parts[1]};
   }
 }
 
