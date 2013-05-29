@@ -40,7 +40,6 @@ var peruskartta = {
     }));*/
 
     var mapChanged = window.proxy(this, function(e) {
-      console.log('move', e);
       var center = this.map.getCenter();
       var zoom = this.map.getZoom();
 
